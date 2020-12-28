@@ -61,7 +61,10 @@ export const Login = () => {
           className="grid gap-3 mt-5 px-5"
         >
           <input
-            ref={register({ required: "Email is required" })}
+            ref={register({
+              required: "Email is required",
+              pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            })}
             name="email"
             required
             type="email"
@@ -70,6 +73,9 @@ export const Login = () => {
           />
           {errors.email?.message && (
             <FormError errorMessage={errors.email?.message} />
+          )}
+          {errors.email?.type === "pattern" && (
+            <FormError errorMessage="Invalid email format" />
           )}
           <input
             ref={register({ required: "Password is required" })}
