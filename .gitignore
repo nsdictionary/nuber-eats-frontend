@@ -26,3 +26,4 @@ yarn-error.log*
 # custom
 .idea*
 .eslintcache
+src/styles/styles.css
