@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { Button } from "../components/button";
 import { Helmet } from "react-helmet";
+import { isLoggedInVar } from "../apollo";
 
 const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
@@ -42,6 +43,7 @@ export const Login = () => {
     } = data;
     if (ok) {
       console.log(token);
+      isLoggedInVar(true);
     }
   };
   const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
@@ -80,7 +82,7 @@ export const Login = () => {
           <input
             ref={register({
               required: "Email is required",
-              pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              pattern: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
             })}
             name="email"
             required
@@ -92,7 +94,7 @@ export const Login = () => {
             <FormError errorMessage={errors.email?.message} />
           )}
           {errors.email?.type === "pattern" && (
-            <FormError errorMessage="Invalid email format" />
+            <FormError errorMessage="Please enter a valid email" />
           )}
           <input
             ref={register({ required: "Password is required" })}
