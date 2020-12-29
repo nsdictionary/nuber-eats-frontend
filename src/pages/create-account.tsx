@@ -47,6 +47,7 @@ export const CreateAccount = () => {
       createAccount: { ok },
     } = data;
     if (ok) {
+      alert("Account Created! Log in now!");
       history.push("/login");
     }
   };
@@ -75,7 +76,7 @@ export const CreateAccount = () => {
         <title>Create Account | Nuber Eats</title>
       </Helmet>
       <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
-        <img src={nuberLogo} alt="logo" className="w-52 mb-10" />
+        <img src={nuberLogo} alt="Nuber Eats" className="w-52 mb-10" />
         <h4 className="w-full font-medium text-left text-3xl mb-5">
           Let's get started
         </h4>
@@ -86,7 +87,7 @@ export const CreateAccount = () => {
           <input
             ref={register({
               required: "Email is required",
-              pattern: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+              pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             })}
             name="email"
             required
