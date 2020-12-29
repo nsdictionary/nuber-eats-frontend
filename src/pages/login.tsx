@@ -9,7 +9,7 @@ import {
 } from "../__generated__/loginMutation";
 import { Link } from "react-router-dom";
 import { Button } from "../components/button";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { isLoggedInVar } from "../apollo";
 
 const LOGIN_MUTATION = gql`

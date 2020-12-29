@@ -2,7 +2,7 @@ import React from "react";
 import { gql, useMutation } from "@apollo/client";
 import { UserRole } from "../__generated__/globalTypes";
 import { useForm } from "react-hook-form";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import nuberLogo from "../images/logo.svg";
 import { Button } from "../components/button";
 import { Link, useHistory } from "react-router-dom";
