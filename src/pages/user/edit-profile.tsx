@@ -1,12 +1,13 @@
 import React from "react";
 import { Button } from "../../components/button";
 import { useMe } from "../../hooks/useMe";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import {
   editProfile,
   editProfileVariables,
 } from "../../__generated__/editProfile";
 import { useForm } from "react-hook-form";
+import { FormError } from "../../components/form-error";
 
 const EDIT_PROFILE_MUTATION = gql`
   mutation editProfile($input: EditProfileInput!) {
@@ -24,14 +25,32 @@ interface IFormProps {
 
 export const EditProfile = () => {
   const { data: userData } = useMe();
+  const client = useApolloClient();
   const onCompleted = (data: editProfile) => {
     const {
       editProfile: { ok },
     } = data;
 
-    console.log("edit result", data);
-    if (ok) {
-      // TODO: update the cache
+    if (ok && userData) {
+      const {
+        me: { email: prevEmail, id },
+      } = userData;
+      const { email: newEmail } = getValues();
+      if (prevEmail !== newEmail) {
+        client.writeFragment({
+          id: `User:${id}`,
+          fragment: gql`
+            fragment EditedUser on User {
+              verified
+              email
+            }
+          `,
+          data: {
+            email: newEmail,
+            verified: false,
+          },
+        });
+      }
     }
   };
 
@@ -40,7 +59,13 @@ export const EditProfile = () => {
     editProfileVariables
   >(EDIT_PROFILE_MUTATION, { onCompleted });
 
-  const { register, handleSubmit, getValues, formState } = useForm<IFormProps>({
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    errors,
+    formState,
+  } = useForm<IFormProps>({
     mode: "onChange",
     defaultValues: {
       email: userData?.me.email,
@@ -75,6 +100,12 @@ export const EditProfile = () => {
           type="email"
           placeholder="Email"
         />
+        {errors.email?.message && (
+          <FormError errorMessage={errors.email?.message} />
+        )}
+        {errors.email?.type === "pattern" && (
+          <FormError errorMessage="Please enter a valid email" />
+        )}
         <input
           ref={register}
           name="password"
@@ -82,6 +113,9 @@ export const EditProfile = () => {
           type="password"
           placeholder="Password"
         />
+        {errors.password?.message && (
+          <FormError errorMessage={errors.password?.message} />
+        )}
         <Button
           loading={loading}
           canClick={formState.isValid}
