@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
 } from "../../__generated__/restaurantsPageQuery";
+import { Restaurant } from "../../components/restaurants";
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsPageQuery($input: AllRestaurantsInput!) {
@@ -37,19 +38,24 @@ const RESTAURANTS_QUERY = gql`
   }
 `;
 
+const PAGE_OFFSET = 3;
+
 export const Restaurants = () => {
+  const [page, setPage] = useState(1);
   const { data, loading } = useQuery<
     restaurantsPageQuery,
     restaurantsPageQueryVariables
   >(RESTAURANTS_QUERY, {
     variables: {
       input: {
-        page: 1,
-        offset: 25,
+        page,
+        offset: PAGE_OFFSET,
       },
     },
   });
-  console.log(data);
+
+  const onNextPageClick = () => setPage((current) => current + 1);
+  const onPrevPageClick = () => setPage((current) => current - 1);
 
   return (
     <div>
@@ -61,15 +67,15 @@ export const Restaurants = () => {
         />
       </form>
       {!loading && (
-        <div className="max-w-screen-2xl mx-auto mt-8">
+        <div className="max-w-screen-2xl pb-20 mx-auto mt-8">
           <div className="flex justify-around max-w-sm mx-auto ">
             {data?.allCategories.categories?.map((category) => (
               <div
                 key={category.id}
-                className="flex flex-col items-center cursor-pointer"
+                className="flex flex-col group items-center cursor-pointer"
               >
                 <div
-                  className="w-14 h-14 bg-cover hover:bg-gray-100 rounded-full"
+                  className="w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
                   style={{ backgroundImage: `url(${category.coverImg})` }}
                 ></div>
                 <span className="mt-1 text-sm text-center font-medium">
@@ -77,6 +83,42 @@ export const Restaurants = () => {
                 </span>
               </div>
             ))}
+          </div>
+          <div className="grid mt-16 grid-cols-3 gap-x-5 gap-y-10">
+            {data?.restaurants.results?.map((restaurant) => (
+              <Restaurant
+                id={restaurant.id.toString()}
+                key={restaurant.id}
+                coverImg={restaurant.coverImg}
+                name={restaurant.name}
+                categoryName={restaurant.category?.name}
+              />
+            ))}
+          </div>
+          <div className="grid grid-cols-3 text-center max-w-md items-center mx-auto mt-10">
+            {page > 1 ? (
+              <button
+                onClick={onPrevPageClick}
+                className="focus:outline-none font-medium text-2xl"
+              >
+                &larr;
+              </button>
+            ) : (
+              <div></div>
+            )}
+            <span>
+              Page {page} of {data?.restaurants.totalPages}
+            </span>
+            {page !== data?.restaurants.totalPages ? (
+              <button
+                onClick={onNextPageClick}
+                className="focus:outline-none font-medium text-2xl"
+              >
+                &rarr;
+              </button>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       )}
