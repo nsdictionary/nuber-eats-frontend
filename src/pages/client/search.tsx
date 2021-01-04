@@ -6,9 +6,10 @@ import {
   searchRestaurant,
   searchRestaurantVariables,
 } from "../../__generated__/searchRestaurant";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { PAGE_OFFSET } from "../../constants";
 import { Restaurant } from "../../components/restaurants";
+import { Pagination } from "../../components/pagination";
 
 const SEARCH_RESTAURANT = gql`
   query searchRestaurant($input: SearchRestaurantInput!) {
@@ -26,6 +27,7 @@ const SEARCH_RESTAURANT = gql`
 `;
 
 export const Search = () => {
+  const [page, setPage] = useState(1);
   const location = useLocation();
   const history = useHistory();
 
@@ -42,13 +44,13 @@ export const Search = () => {
     callQuery({
       variables: {
         input: {
-          page: 1,
-          offset: PAGE_OFFSET,
+          page,
           query,
+          offset: PAGE_OFFSET,
         },
       },
     });
-  }, [callQuery, history, location]);
+  }, [callQuery, history, location, page]);
 
   return (
     <div>
@@ -70,6 +72,11 @@ export const Search = () => {
                 />
               ))}
           </div>
+          <Pagination
+            page={page}
+            totalPages={data?.searchRestaurant.totalPages}
+            setPage={setPage}
+          />
         </div>
       )}
     </div>

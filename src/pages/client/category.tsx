@@ -5,7 +5,8 @@ import { category, categoryVariables } from "../../__generated__/category";
 import { PAGE_OFFSET } from "../../constants";
 import { Helmet } from "react-helmet-async";
 import { Restaurant } from "../../components/restaurants";
-import React from "react";
+import React, { useState } from "react";
+import { Pagination } from "../../components/pagination";
 
 const CATEGORY_QUERY = gql`
   query category($input: CategoryInput!) {
@@ -31,15 +32,16 @@ interface ICategoryParams {
 }
 
 export const Category = () => {
+  const [page, setPage] = useState(1);
   const { slug } = useParams<ICategoryParams>();
   const { data, loading } = useQuery<category, categoryVariables>(
     CATEGORY_QUERY,
     {
       variables: {
         input: {
-          page: 1,
-          offset: PAGE_OFFSET,
+          page,
           slug,
+          offset: PAGE_OFFSET,
         },
       },
     }
@@ -65,6 +67,11 @@ export const Category = () => {
                 />
               ))}
           </div>
+          <Pagination
+            page={page}
+            totalPages={data?.category.totalPages}
+            setPage={setPage}
+          />
         </div>
       )}
     </div>

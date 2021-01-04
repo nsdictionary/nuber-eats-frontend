@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { PAGE_OFFSET } from "../../constants";
 import { Category } from "../../components/category";
+import { Pagination } from "../../components/pagination";
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsPageQuery($input: AllRestaurantsInput!) {
@@ -52,9 +53,6 @@ export const Restaurants = () => {
       },
     },
   });
-
-  const onNextPageClick = () => setPage((current) => current + 1);
-  const onPrevPageClick = () => setPage((current) => current - 1);
 
   const { register, handleSubmit, getValues } = useForm<IFormProps>();
   const history = useHistory();
@@ -107,31 +105,11 @@ export const Restaurants = () => {
               />
             ))}
           </div>
-          <div className="grid grid-cols-3 text-center max-w-md items-center mx-auto mt-10">
-            {page > 1 ? (
-              <button
-                onClick={onPrevPageClick}
-                className="focus:outline-none font-medium text-2xl"
-              >
-                &larr;
-              </button>
-            ) : (
-              <div></div>
-            )}
-            <span>
-              Page {page} of {data?.restaurants.totalPages}
-            </span>
-            {page !== data?.restaurants.totalPages ? (
-              <button
-                onClick={onNextPageClick}
-                className="focus:outline-none font-medium text-2xl"
-              >
-                &rarr;
-              </button>
-            ) : (
-              <div></div>
-            )}
-          </div>
+          <Pagination
+            page={page}
+            totalPages={data?.restaurants.totalPages}
+            setPage={setPage}
+          />
         </div>
       )}
     </div>
