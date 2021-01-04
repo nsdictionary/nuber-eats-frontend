@@ -1,11 +1,12 @@
 import { RESTAURANT_FRAGMENT } from "../../fragments";
 import { gql, useQuery } from "@apollo/client";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   restaurant,
   restaurantVariables,
 } from "../../__generated__/restaurant";
 import { Helmet } from "react-helmet-async";
+import React from "react";
 
 const RESTAURANT_QUERY = gql`
   query restaurant($input: RestaurantInput!) {
@@ -45,11 +46,13 @@ export const Restaurant = () => {
             backgroundImage: `url(${data?.restaurant.results?.coverImg})`,
           }}
         >
-          <div className="bg-white w-3/12 py-8 pl-10">
+          <div className="bg-white w-3/12 py-8 pl-10 lg:pl-28">
             <h4 className="text-4xl mb-3">{data?.restaurant.results?.name}</h4>
-            <h5 className="text-sm font-light mb-2">
-              {data?.restaurant.results?.category?.name}
-            </h5>
+            <Link to={`/category/${data?.restaurant.results?.category?.name}`}>
+              <h5 className="text-sm font-light mb-2">
+                {data?.restaurant.results?.category?.name}
+              </h5>
+            </Link>
             <h6 className="text-sm font-light">
               {data?.restaurant.results?.address}
             </h6>
