@@ -18,6 +18,12 @@ export interface AllRestaurantsInput {
   offset?: number | null;
 }
 
+export interface CategoryInput {
+  page?: number | null;
+  offset?: number | null;
+  slug: string;
+}
+
 export interface CreateAccountInput {
   email: string;
   password: string;

@@ -7,6 +7,7 @@ import {
   searchRestaurantVariables,
 } from "../../__generated__/searchRestaurant";
 import { useEffect } from "react";
+import { PAGE_OFFSET } from "../../constants";
 
 const SEARCH_RESTAURANT = gql`
   query searchRestaurant($input: SearchRestaurantInput!) {
@@ -22,8 +23,6 @@ const SEARCH_RESTAURANT = gql`
   }
   ${RESTAURANT_FRAGMENT}
 `;
-
-const PAGE_OFFSET = 3;
 
 export const Search = () => {
   const location = useLocation();
