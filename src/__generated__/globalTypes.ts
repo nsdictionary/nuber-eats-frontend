@@ -34,6 +34,12 @@ export interface LoginInput {
   password: string;
 }
 
+export interface SearchRestaurantInput {
+  page?: number | null;
+  offset?: number | null;
+  query: string;
+}
+
 export interface VerifyEmailInput {
   code: string;
 }
