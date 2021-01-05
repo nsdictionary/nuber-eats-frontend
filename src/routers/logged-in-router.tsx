@@ -46,7 +46,6 @@ export const LoggedInRouter = () => {
       <Header />
       <Switch>
         {data.me.role === "Client" && ClientRoutes}
-        {/*<Redirect to="/"></Redirect>*/}
         <Route>
           <NotFound />
         </Route>
