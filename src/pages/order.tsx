@@ -5,6 +5,7 @@ import { getOrder, getOrderVariables } from "../__generated__/getOrder";
 import { FULL_ORDER_FRAGMENT } from "../fragments";
 import { orderUpdates } from "../__generated__/orderUpdates";
 import { Helmet } from "react-helmet-async";
+import { useMe } from "../hooks/useMe";
 
 const GET_ORDER = gql`
   query getOrder($input: GetOrderInput!) {
@@ -34,6 +35,7 @@ interface IParams {
 
 export const Order = () => {
   const params = useParams<IParams>();
+  const { data: userData } = useMe();
   const { data, subscribeToMore } = useQuery<getOrder, getOrderVariables>(
     GET_ORDER,
     {
@@ -72,7 +74,7 @@ export const Order = () => {
         },
       });
     }
-  }, [data]);
+  }, [data, params.id, subscribeToMore]);
 
   return (
     <div className="mt-32 container flex justify-center">
@@ -105,9 +107,21 @@ export const Order = () => {
               {data?.getOrder.order?.driver?.email || "Not yet."}
             </span>
           </div>
-          <span className=" text-center mt-5 mb-3  text-2xl text-lime-600">
-            Status: {data?.getOrder.order?.status}
-          </span>
+          {userData?.me.role === "Client" && (
+            <span className=" text-center mt-5 mb-3  text-2xl text-lime-600">
+              Status: {data?.getOrder.order?.status}
+            </span>
+          )}
+          {userData?.me.role === "Owner" && (
+            <>
+              {data?.getOrder.order?.status === "Pending" && (
+                <button className="btn">Accept Order</button>
+              )}
+              {data?.getOrder.order?.status === "Cooking" && (
+                <button className="btn">Order Cooked</button>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
