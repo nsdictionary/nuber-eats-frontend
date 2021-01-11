@@ -17,6 +17,7 @@ export const authTokenVar = makeVar(token);
 const wsLink = new WebSocketLink({
   uri: `ws://localhost:4000/graphql`,
   options: {
+    lazy: true,
     reconnect: true,
     connectionParams: {
       "x-jwt": authTokenVar() || "",
