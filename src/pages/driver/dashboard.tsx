@@ -64,7 +64,7 @@ export const Dashboard = () => {
             lat: 36.58,
             lng: 125.95,
           }}
-          bootstrapURLKeys={{ key: "AIzaSyA7luXUiadLSv1oazhK__m5o-DcqPk03CU" }}
+          bootstrapURLKeys={{ key: `${process.env.REACT_APP_GCP_API_KEY}` }}
         >
           <Driver lat={driverCoords.lat} lng={driverCoords.lng} />
         </GoogleMapReact>
