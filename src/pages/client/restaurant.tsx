@@ -187,7 +187,7 @@ export const Restaurant = () => {
           backgroundImage: `url(${data?.restaurant.results?.coverImg})`,
         }}
       >
-        <div className="bg-white w-3/12 py-8 pl-10 lg:pl-28">
+        <div className="bg-white xl:w-3/12 py-8 pl-10 lg:pl-28">
           <h4 className="text-4xl mb-3">{data?.restaurant.results?.name}</h4>
           <Link to={`/category/${data?.restaurant.results?.category?.name}`}>
             <h5 className="text-sm font-light mb-2">
